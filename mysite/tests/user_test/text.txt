@@ -1,0 +1,60 @@
+
+
+1. 토큰 발급 (/token/) post
+
+2. 토큰 삭제(/token/) delete
+3. 토큰 재발급 (/token/) post id
+4. 유저 정보 보기(10페이지) /user paging
+5. 유저 상세보기 /user id
+5. 유저 생성 /user post
+6. 유저 정보 수정 /user update
+7. 유저 정보 삭제 /user delete
+- 좋아요 기능 /user/like user_id, recipe_id
+
+8. 로그인 /user/login/ id passwd
+9. 로그아웃 /user/logout
+#추가사항
+10. 60초 동안 횟수제한 로그인
+
+
+
+abstactuser 기본 제공 필드(필드만 커스텀, 인증은 장고에 맡김)
+
+1. username
+필수값! 150자 이하의 영숫자, _, @, +, ., -를 포함할 수 있다.
+
+2. first_name
+선택값(blank=True). 150자 이하
+
+3. last_name
+선택값(blank=True). 150자 이하
+
+4. email
+선택값(blank=True). 이메일 주소
+
+5. password
+필수값! password에 대한 해시값과 메타데이터값
+
+6. groups
+그룹에 대한 필드
+
+7. user_permissions
+유저의 권한을 설정하는 필드
+
+8. is_staff
+Boolean 타입. 이 사용자가 관리자 사이트에 접근할 수 있는지 지정한다.
+
+9. is_active
+Boolena 타입. 이 사용자 계정을 활성으로 간주할지를 지정한다.
+
+10. is_superuser
+Boolean 타입. 이 사용자에게 명시적으로 할당하지 않고, 모든 권한이 있음을 지정한다.
+
+11. last_login
+사용자의 마지막 로그인 날짜/시간 (datetime)
+
+12. date_joined
+계정이 만들어진 날짜/시간 (datetime)
+
+
+abstacbaseuser는 필드, 인증 다 커스텀
