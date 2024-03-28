@@ -1,25 +1,28 @@
 import pytest
-from tests.recipe_test.factories import RecipeFactory, IngredientFactory
+from tests.recipe_test.factories import RecipeFactory, IngredientFactory, RecipeIngredientRelationFactory
+
 
 @pytest.fixture() 
-def basic_recipes():    
-    recipe_instances = RecipeFactory.create_batch(10)
-    ingredient_instances = IngredientFactory(recipes=recipe_instances)
+def basic_recipes():
+    ingredient_instances = IngredientFactory.create_batch(5)
+    recipe_instances = RecipeFactory.create_batch(10, preprocessed_ingredients=ingredient_instances)
+    
     return recipe_instances
 
 @pytest.fixture()
 def basic_recipe():
-    instance = RecipeFactory.create()
+    ingredient_instances = IngredientFactory.create_batch(5)
+    instance = RecipeFactory.create(preprocessed_ingredients=ingredient_instances)
     return instance
 
 @pytest.fixture
-def basic_recipe_build():    
+def basic_recipe_build():
     instance = RecipeFactory.build() 
     return instance
 
 @pytest.fixture() 
 def basic_ingredients():    
-    instances = IngredientFactory.create_batch(10)   
+    instances = IngredientFactory.create_batch(5)   
     return instances
 
 @pytest.fixture()
@@ -31,3 +34,13 @@ def basic_ingredient():
 def basic_ingredient_build():    
     instance = IngredientFactory.build() 
     return instance
+
+@pytest.fixture
+def recipe_ingregient_relation():
+    ingredients = IngredientFactory.create_batch(5)
+    recipe_instance = RecipeFactory.create()
+    
+    for ingredient in ingredients:
+        RecipeIngredientRelationFactory.create(ingredient_id_id=ingredient.id, recipe_id_id=recipe_instance.id)
+        
+    return recipe_instance, ingredients

@@ -6,7 +6,7 @@ class RecipeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Recipe
         fields = "__all__"
-        
+        depth = 1
 
     # @transaction.atomic
     # def create(self, validated_data: dict[str, Any]) -> Recipe:

@@ -14,6 +14,7 @@ from drf_spectacular.types import OpenApiTypes
 from rest_framework.pagination import PageNumberPagination
 from recipe.service import RecipeAppService
 from rest_framework import filters
+import json
 # Create your views here.
 
 
@@ -48,34 +49,35 @@ class RecipeViewSet(viewsets.ModelViewSet):
     
     def create(self,request):
         serializer = RecipeSerializer(data=request.data)
-        print(Recipe.objects.all())
-        print(Ingredient.objects.get(ingredient="사과"))
+    
         if serializer.is_valid():
             serializer.save()
-
-        return Response(serializer.data)
+        
+        return Response(status=201, data=serializer.data)
     
-    def update(self, request, pk=None):
+    def update(self, request, pk=None): #put
         
         serializer = RecipeSerializer(data=request.data, partial=False)
-        if serializer.is_valid(raise_exception=True):
-            serializer.save()
         
-        return Response(serializer.data)
-    
-    def partial_update(self, request,pk=None):
-        
-        serializer = RecipeSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
-            serializer.save()
-        return Response(serializer.data)
+            result = serializer.save()
+            result_serializer = RecipeSerializer(instance=result) #serializer는 읽기전용, 수정불가능
+            data = dict(result_serializer.data)
+            n = len(RecipeIngredientRelation.objects.filter(recipe_id=request.data['id']))
+            data['preprocessed_ingredients'] = n
+            
+        return Response(data=data)
 
     def destroy(self, request,pk=None):
         
         queryset = Recipe.objects.get(pk=pk)
+        result = queryset.delete()
         
-        return Response(queryset.delete())
-    
+        data = {"ingredients": result[1]['recipe.RecipeIngredientRelation'], "recipe":result[1]['recipe.Recipe']}
+        
+        return Response(status=204, data=data)
+        
+
     @action(detail=False,methods=["post"])
     def custom_create(self, request, *args, **kwargs):
         
