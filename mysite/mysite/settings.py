@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     "recipe.apps.RecipeConfig",
     "phonenumber_field",
     'drf_spectacular',
+    'django_extensions',
 ]
 
 MIDDLEWARE = [

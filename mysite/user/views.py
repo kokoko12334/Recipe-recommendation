@@ -32,6 +32,7 @@ class CustomUserViewSet(viewsets.ModelViewSet):
         "create": CustomUserRequestSchema,
         "update": CustomUserRequestSchema,
         "partial_update": CustomUserRequestSchema,
+        "destroy": CustomUserRequestSchema,
     }
     
     def get_serializer_class(self):
