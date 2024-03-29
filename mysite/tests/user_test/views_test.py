@@ -8,6 +8,7 @@ from user.serializers import CustomUserRequestSchema
 import json
 from django.forms.models import model_to_dict
 from user.models import CustomUser
+from recipe.serializers import RecipeSerializer
 
 
 """
@@ -58,7 +59,7 @@ class TestUserView:
         serializer = CustomUserRequestSchema(instance=user_instance)
         json_data = json.dumps(serializer.data)
         response = self.client.patch(path=url, data=json_data, content_type="application/json")
-        
+        print(response.data)
         assert response.status_code == 200
         assert response.data['id'] == user_instance.id
         assert response.data['username'] == user_instance.username
@@ -70,9 +71,31 @@ class TestUserView:
         
         assert response.status_code == 204
         
+    def test_like_create(self, like_create_testcase):
+        recipe_instance, user_instance = like_create_testcase
+        url = reverse("user-like-create", kwargs={"pk": user_instance.id})
+        data = {"recipe_id":recipe_instance.id}
+        json_data = json.dumps(data)
+
+        response = self.client.post(path=url, data=json_data, content_type = "application/json")
+        response_data = json.loads(response.data)
+
+        assert response.status_code == 201
+        assert response_data['recipe_id'] == data['recipe_id']
+
+    def test_like_delete(self, like_delete_testcase):
+        recipe_instance, user_instance = like_delete_testcase
+        url = reverse("user-like-create", kwargs={"pk": user_instance.id})
+        data = {"recipe_id":recipe_instance.id}
+        json_data = json.dumps(data)
+
+        response = self.client.delete(path=url, data=json_data, content_type="application/json")
+        response_data = json.loads(response.data)
         
-    # def test_user_like(self):
-    #     self.client.post()
+        assert response.status_code == 204
+        assert response_data['recipe_id'] == data['recipe_id']
+     
+    
 
     # def test_login(self):
     #     self.client.post()

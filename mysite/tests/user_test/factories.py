@@ -8,7 +8,7 @@ class UserFactory(factory.django.DjangoModelFactory):
         model = CustomUser
         
     id = factory.Sequence(lambda n: n + 1)  # create_batch나 create 시 충돌 방지
-    username = factory.Sequence(lambda n: 'fake name{0}'.format(n)) #=> unique는 이런식으로 유니크값 보장하기
+    username = factory.Sequence(lambda n: 'fake name{0}'.format(n))
     first_name = factory.Faker("first_name")
     last_name = factory.Faker("last_name")
     email = factory.Faker("email")
@@ -16,7 +16,18 @@ class UserFactory(factory.django.DjangoModelFactory):
     date_of_birth = factory.Faker("date_of_birth")
     phone =  factory.LazyAttribute(lambda x: f"+8210{random.randint(1000, 9999)}{random.randint(1000, 9999)}")
 
-class LikesFactory(factory.django.DjangoModelFactory):
-    class Meta:
-        model = Recipe
+    @factory.post_generation
+    def like(self, create, extracted, **kwargs):
+        if not create:
+            return
+        if extracted:
+            for recipe in extracted:
+                self.like.add(recipe)
+
+    @classmethod
+    def _after_postgeneration(cls, instance, create, results=None):
+        if create and results:
+            instance.save()
+
+
 

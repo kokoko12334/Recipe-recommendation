@@ -1,6 +1,7 @@
 import pytest
 from django.conf import settings
 from tests.user_test.factories import UserFactory
+from tests.recipe_test.factories import RecipeFactory, IngredientFactory
 # 실제 db에 접근 시
 # @pytest.fixture(scope='session')
 # def django_db_setup():
@@ -22,16 +23,35 @@ from tests.user_test.factories import UserFactory
 # 주의사항: 실행할때 마다(즉 함수에서 파라미터로 쓸 때마다 각 각 10개씩 생성, 같은 10개를 쓰는 것이 아님)
 
 @pytest.fixture(scope="function") # scope ="session"=> 하나의 테스트에만 적용 하지만 db접근하려면 무조건 함수단위로 session을 해야한다 함.
-def basic_users():    
-    instances = UserFactory.create_batch(10)   
+def basic_users():
+    ingredients_instances = IngredientFactory.create_batch(5)
+    recipe_instances = RecipeFactory.create_batch(5,preprocessed_ingredients=ingredients_instances)
+    instances = UserFactory.create_batch(10, like=recipe_instances)   
     return instances
 
 @pytest.fixture()
 def basic_user():
-    instance = UserFactory.create()
+    ingredients_instances = IngredientFactory.create_batch(5)
+    recipe_instances = RecipeFactory.create_batch(5,preprocessed_ingredients=ingredients_instances)
+    instance = UserFactory.create(like=recipe_instances)
     return instance
 
 @pytest.fixture
 def basic_user_build():    
     instance = UserFactory.build() 
     return instance
+
+@pytest.fixture
+def like_create_testcase():
+    ingredients_instances = IngredientFactory.create_batch(5)
+    recipe_instance = RecipeFactory.create(preprocessed_ingredients=ingredients_instances)
+    user_instance = UserFactory.create()
+    return recipe_instance, user_instance
+
+@pytest.fixture
+def like_delete_testcase():
+    ingredients_instances = IngredientFactory.create_batch(5)
+    recipe_instance = RecipeFactory.create(preprocessed_ingredients=ingredients_instances)
+    user_instance = UserFactory.create(like=[recipe_instance])
+    return recipe_instance, user_instance
+

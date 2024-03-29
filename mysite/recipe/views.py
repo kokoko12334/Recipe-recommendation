@@ -40,6 +40,8 @@ class RecipeViewSet(viewsets.ModelViewSet):
     def list(self, request):
         queryset = Recipe.objects.all()
         serializer = RecipeSerializer(queryset, many=True)
+
+        # print(RecipeIngredientRelation.objects.all())
         return Response(serializer.data)
 
     def retrieve(self, request, pk=None):

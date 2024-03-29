@@ -13,6 +13,7 @@ def basic_recipes():
 def basic_recipe():
     ingredient_instances = IngredientFactory.create_batch(5)
     instance = RecipeFactory.create(preprocessed_ingredients=ingredient_instances)
+    # relation테이블에도 자동으로 생성
     return instance
 
 @pytest.fixture
@@ -38,9 +39,6 @@ def basic_ingredient_build():
 @pytest.fixture
 def recipe_ingregient_relation():
     ingredients = IngredientFactory.create_batch(5)
-    recipe_instance = RecipeFactory.create()
-    
-    for ingredient in ingredients:
-        RecipeIngredientRelationFactory.create(ingredient_id_id=ingredient.id, recipe_id_id=recipe_instance.id)
-        
+    recipe_instance = RecipeFactory.create(preprocessed_ingredients=ingredients)  #
+
     return recipe_instance, ingredients
