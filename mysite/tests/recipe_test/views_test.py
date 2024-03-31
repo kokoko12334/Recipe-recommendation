@@ -16,7 +16,7 @@ class TestRecipeView:
         url = reverse("recipe-list")
         response = self.client.get(path=url, content_type="application/json")
         n = len(instances)
-        # print(response.data)
+        print(response.data)
         assert response.status_code == 200
         for i in range(n):
             assert response.data[i]['id'] == instances[i].id
@@ -25,7 +25,7 @@ class TestRecipeView:
         instance = basic_recipe
         url = reverse("recipe-detail", kwargs={"pk":instance.id})
         response = self.client.get(path=url, content_type="application/json")
-        
+        print(response.data)
         assert response.status_code == 200
         assert response.data['id'] == instance.id
         assert response.data['recipe_name'] == instance.recipe_name

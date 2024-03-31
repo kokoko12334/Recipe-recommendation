@@ -2,6 +2,7 @@ import pytest
 from django.conf import settings
 from tests.user_test.factories import UserFactory
 from tests.recipe_test.factories import RecipeFactory, IngredientFactory
+from faker import Faker
 # 실제 db에 접근 시
 # @pytest.fixture(scope='session')
 # def django_db_setup():
@@ -40,6 +41,14 @@ def basic_user():
 def basic_user_build():    
     instance = UserFactory.build() 
     return instance
+
+@pytest.fixture
+def basic_user_with_raw_password():
+    raw_password = Faker().password()  # 평문 패스워드 생성
+    # UserFactory 호출 시 password 인자에 평문 패스워드를 전달
+    user_instance = UserFactory.create(password=raw_password)
+    # 생성된 객체에 평문 패스워드를 별도로 저장하지 않고, 필요한 경우 반환
+    return user_instance, raw_password
 
 @pytest.fixture
 def like_create_testcase():

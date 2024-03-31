@@ -47,7 +47,7 @@ class TestUserView:
         serializer = CustomUserRequestSchema(instance=user_instance)
         json_data = json.dumps(serializer.data)
         response = self.client.post(path=url, data=json_data, content_type="application/json")
-
+        print(response.data)
         assert response.status_code == 201
         assert response.data["id"] == user_instance.id
         assert response.data["username"] == user_instance.username
@@ -59,7 +59,7 @@ class TestUserView:
         serializer = CustomUserRequestSchema(instance=user_instance)
         json_data = json.dumps(serializer.data)
         response = self.client.patch(path=url, data=json_data, content_type="application/json")
-        print(response.data)
+        # print(response.data)
         assert response.status_code == 200
         assert response.data['id'] == user_instance.id
         assert response.data['username'] == user_instance.username
@@ -95,12 +95,25 @@ class TestUserView:
         assert response.status_code == 204
         assert response_data['recipe_id'] == data['recipe_id']
      
-    
+    def test_login(self, basic_user_with_raw_password):
+        user_instance, raw_password = basic_user_with_raw_password
+        url = reverse('user-login')
+        data = {
+            'email': user_instance.email,
+            'password': raw_password,
+        }
+  
+        json_data = json.dumps(data,)
+        response = self.client.post(path=url, data=json_data, content_type="application/json")
+        # print(response.data)
+        assert response.status_code == 200
 
-    # def test_login(self):
-    #     self.client.post()
+        session_id = response.cookies.get('sessionid') # 없으면 None
+        assert session_id != None
 
-    # def test_logout(self):
+
+    # def test_logout(self, basic_user_with_raw_password):
+
     #     self.client.post()
     
 

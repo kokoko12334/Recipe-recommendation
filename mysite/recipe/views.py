@@ -15,15 +15,19 @@ from rest_framework.pagination import PageNumberPagination
 from recipe.service import RecipeAppService
 from rest_framework import filters
 import json
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+from rest_framework.permissions import IsAuthenticated
 # Create your views here.
 
 
 class RecipeViewSet(viewsets.ModelViewSet):
     
     queryset = Recipe.objects.all()
-    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
-    
     serializer_class = RecipeSerializer
+
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    permission_classes = [IsAuthenticated]
+
     #,커스텀 엔드포인트 작성 함수이름이 자동으로 엔드포인트가 됨 detail=True면 id키 받고 아니면 전체리스트(list)
     # @action(detail=False, methods=["post"],url_path="create_with_prepared_ingredients/(?P<ingre>\d+)")  #커스텀action에 인자 넣고싶을때
     # 이때 d는 숫자형인듯

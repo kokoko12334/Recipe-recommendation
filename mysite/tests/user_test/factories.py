@@ -24,6 +24,12 @@ class UserFactory(factory.django.DjangoModelFactory):
             for recipe in extracted:
                 self.like.add(recipe)
 
+    @factory.post_generation
+    def hash_password(self, create, extracted, **kwargs):
+        # 패스워드를 해시 처리
+        self.set_password(self.password)
+        
+    #post_generation 실행 후 변경사항 저장
     @classmethod
     def _after_postgeneration(cls, instance, create, results=None):
         if create and results:

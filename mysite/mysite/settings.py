@@ -33,8 +33,15 @@ ALLOWED_HOSTS = []
 
 AUTH_USER_MODEL = 'user.CustomUser'
 
+SESSION_ENGINE = 'django.contrib.sessions.backends.db' # 기본값
+
+AUTHENTICATION_BACKENDS = [
+    'user.authentication.EmailBackend',  # 사용자 정의 인증 백엔드
+    'django.contrib.auth.backends.ModelBackend',  # 기본 모델 백엔드
+]
+
 REST_FRAMEWORK = {
-    # 토큰 인증관련
+    # # 토큰 인증관련(전역)
     # 'DEFAULT_AUTHENTICATION_CLASSES': [
     #     'rest_framework.authentication.SessionAuthentication',
     #     'rest_framework.authentication.BasicAuthentication'
