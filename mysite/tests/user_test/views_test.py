@@ -47,7 +47,7 @@ class TestUserView:
         serializer = CustomUserRequestSchema(instance=user_instance)
         json_data = json.dumps(serializer.data)
         response = self.client.post(path=url, data=json_data, content_type="application/json")
-        print(response.data)
+        # print(response.data)
         assert response.status_code == 201
         assert response.data["id"] == user_instance.id
         assert response.data["username"] == user_instance.username
@@ -112,9 +112,26 @@ class TestUserView:
         assert session_id != None
 
 
-    # def test_logout(self, basic_user_with_raw_password):
+    def test_logout(self, basic_user_with_raw_password):
+        user_instance, raw_password = basic_user_with_raw_password
+        login_url = reverse('user-login')
+        data = {
+            'email': user_instance.email,
+            'password': raw_password,
+        }
+  
+        json_data = json.dumps(data,)
+        response = self.client.post(path=login_url, data=json_data, content_type="application/json")
 
-    #     self.client.post()
+        session_id = response.cookies.get('sessionid').value
+        csrf_token = response.cookies.get('csrftoken').value
+        self.client.credentials(HTTP_X_CSRFTOKEN=csrf_token)
+
+        logout_url = reverse('user-logout')
+        response = self.client.post(path=logout_url, content_type="application/json")
+        print(response.data)
+        assert response.status_code == 200
+
     
 
 

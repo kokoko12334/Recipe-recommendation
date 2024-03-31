@@ -4,7 +4,6 @@ from django.contrib.auth import authenticate, login
 
 from rest_framework import viewsets, status
 from rest_framework.decorators import api_view, action
-from rest_framework.views import APIView
 from rest_framework.response import Response
 
 from user.serializers import CustomUserSchema, CustomUserDetailSchema, CustomUserRequestSchema, LikesSerializer
@@ -80,10 +79,11 @@ class CustomUserViewSet(viewsets.ModelViewSet):
         else:
             return Response({'detail': '인증 실패'}, status=status.HTTP_401_UNAUTHORIZED)
 
+
     @action(detail=False, methods=['POST',], url_path='logout')
     def logout(self, request, **kwargs):
     
-        request.session.flush()
+        request.session.flush() # flush의 정확한 작동방식 알아내기
 
         # 로그아웃 메시지
         return Response({"message": "로그아웃 성공"}, status=status.HTTP_200_OK)
