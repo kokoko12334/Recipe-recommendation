@@ -123,13 +123,17 @@ class TestUserView:
         json_data = json.dumps(data,)
         response = self.client.post(path=login_url, data=json_data, content_type="application/json")
 
-        session_id = response.cookies.get('sessionid').value
         csrf_token = response.cookies.get('csrftoken').value
         self.client.credentials(HTTP_X_CSRFTOKEN=csrf_token)
 
         logout_url = reverse('user-logout')
-        response = self.client.post(path=logout_url, content_type="application/json")
-        print(response.data)
+
+        session_id = response.cookies.get('sessionid').value
+        data = {"sessionid": session_id}
+        json_data = json.dumps(data)
+
+        response = self.client.post(path=logout_url, data=json_data, content_type="application/json")
+        # print(response.data)
         assert response.status_code == 200
 
     

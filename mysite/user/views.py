@@ -9,7 +9,7 @@ from rest_framework.response import Response
 from user.serializers import CustomUserSchema, CustomUserDetailSchema, CustomUserRequestSchema, LikesSerializer
 from user.models import CustomUser
 from recipe.models import Recipe
-
+from django.contrib.sessions.models import Session
 import time
 import json
 
@@ -82,8 +82,21 @@ class CustomUserViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=['POST',], url_path='logout')
     def logout(self, request, **kwargs):
-    
-        request.session.flush() # flush의 정확한 작동방식 알아내기
+        
+        # for k,v in request.session.items():
+        #     print(f"key:{k}, value:{v}")
+
+        # session_id = request.data['sessionid']
+        # sessions = Session.objects.all()
+
+        # 특정 세션 키로 세션 데이터 조회
+        # session = Session.objects.get(session_key=session_id)
+        # print(f"session:{session.session_key}, session_value:{session.session_data}")
+
+        # (or to be more precise, the connection to the current browser, 
+        # as identified by the session id in the browser's cookie for this site).
+        # request.session.clear() # 세션데이터만 삭제
+        request.session.flush() # clear + 세션관련 db도 삭제
 
         # 로그아웃 메시지
         return Response({"message": "로그아웃 성공"}, status=status.HTTP_200_OK)
