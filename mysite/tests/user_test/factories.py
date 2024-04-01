@@ -1,7 +1,6 @@
 import factory
 import random
-from user.models import CustomUser, Likes
-from recipe.models import Recipe, RecipeIngredientRelation, Ingredient
+from user.models import CustomUser
 
 class UserFactory(factory.django.DjangoModelFactory):
     class Meta:

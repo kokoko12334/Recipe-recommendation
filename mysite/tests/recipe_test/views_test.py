@@ -1,22 +1,23 @@
 import pytest
 from rest_framework.test import APIClient
-from tests.recipe_test.factories import RecipeFactory, IngredientFactory
 from django.urls import reverse
-from recipe.serializers import RecipeSerializer, IngredientSerializer, RecipeIngredientRelationSerializer
-from user.serializers import CustomUserRequestSchema
+from recipe.serializers import RecipeSerializer, IngredientSerializer
+from user.models import CustomUser
 import json
 
 @pytest.mark.django_db()
 class TestRecipeView:
+    user = CustomUser(username="testuser",password="password")
     client = APIClient()
+    client.force_authenticate(user=user) # 인증했다고 처리
     end_point = "/recipes/"
-    
+
     def test_recipe_get(self, basic_recipes):
         instances = basic_recipes
         url = reverse("recipe-list")
         response = self.client.get(path=url, content_type="application/json")
         n = len(instances)
-        print(response.data)
+        # print(response.data)
         assert response.status_code == 200
         for i in range(n):
             assert response.data[i]['id'] == instances[i].id
@@ -25,7 +26,7 @@ class TestRecipeView:
         instance = basic_recipe
         url = reverse("recipe-detail", kwargs={"pk":instance.id})
         response = self.client.get(path=url, content_type="application/json")
-        print(response.data)
+        # print(response.data)
         assert response.status_code == 200
         assert response.data['id'] == instance.id
         assert response.data['recipe_name'] == instance.recipe_name
@@ -76,7 +77,9 @@ class TestRecipeView:
 
 @pytest.mark.django_db()
 class TestIngredientView:
+    user = CustomUser(username="testuser",password="password")
     client = APIClient()
+    client.force_authenticate(user=user) # 인증했다고 처리
     end_point = "/ingredients/"
     
     def test_ingredient_get(self, basic_ingredients):
@@ -115,3 +118,4 @@ class TestIngredientView:
         response = self.client.delete(path=url, content_type="application/json")
         
         assert response.status_code == 204
+

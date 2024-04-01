@@ -1,7 +1,6 @@
 from rest_framework import serializers
 from recipe.models import Recipe, Ingredient, RecipeIngredientRelation
-from django.db import transaction
-from typing import Any
+
 class RecipeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Recipe

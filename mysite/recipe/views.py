@@ -1,24 +1,12 @@
-
-from rest_framework.decorators import action, api_view
+from rest_framework.decorators import action
 from rest_framework.response import Response
-from rest_framework.request import Request
-from recipe.serializers import RecipeSerializer
-from recipe.models import Recipe
-from typing import Dict, Any, List
 from rest_framework import viewsets
-from recipe.models import Recipe, Ingredient, RecipeIngredientRelation
-from recipe.serializers import RecipeSerializer, IngredientSerializer, RecipeIngredientRelationSerializer
-from django.db import transaction
-from drf_spectacular.utils import extend_schema,OpenApiParameter
-from drf_spectacular.types import OpenApiTypes
-from rest_framework.pagination import PageNumberPagination
-from recipe.service import RecipeAppService
-from rest_framework import filters
-import json
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework.permissions import IsAuthenticated
-# Create your views here.
 
+from recipe.models import Recipe, Ingredient, RecipeIngredientRelation
+from recipe.serializers import RecipeSerializer, IngredientSerializer, RecipeIngredientRelationSerializer
+from recipe.service import RecipeAppService
 
 class RecipeViewSet(viewsets.ModelViewSet):
     
@@ -101,11 +89,14 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
 class IngredientViewSet(viewsets.ModelViewSet):
     queryset = Ingredient.objects.all()
-    
     serializer_class = IngredientSerializer
+
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    permission_classes = [IsAuthenticated]
 
 
 class RecipeIngredientRelationViewSet(viewsets.ModelViewSet):
     queryset = RecipeIngredientRelation.objects.all()
-
     serializer_class = RecipeIngredientRelationSerializer
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    permission_classes = [IsAuthenticated]

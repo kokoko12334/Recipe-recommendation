@@ -9,9 +9,11 @@ from rest_framework.response import Response
 from user.serializers import CustomUserSchema, CustomUserDetailSchema, CustomUserRequestSchema, LikesSerializer
 from user.models import CustomUser
 from recipe.models import Recipe
-from django.contrib.sessions.models import Session
+
 import time
 import json
+# from django.contrib.sessions.models import Session
+
 
 
 def main_page(request):

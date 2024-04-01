@@ -1,5 +1,5 @@
 import pytest
-from tests.recipe_test.factories import RecipeFactory, IngredientFactory, RecipeIngredientRelationFactory
+from tests.recipe_test.factories import RecipeFactory, IngredientFactory
 
 
 @pytest.fixture() 

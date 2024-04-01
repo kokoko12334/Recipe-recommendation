@@ -1,15 +1,8 @@
 import pytest
-from model_bakery import baker
 from rest_framework.test import APIClient
-from tests.user_test.factories import UserFactory
 from django.urls import reverse
-from user.models import CustomUser
 from user.serializers import CustomUserRequestSchema
 import json
-from django.forms.models import model_to_dict
-from user.models import CustomUser
-from recipe.serializers import RecipeSerializer
-
 
 """
 - `build` 전략은 데이터베이스에 저장되지 않는 실제 모델 인스턴스를 생성합니다. 이를 통해 모델의 메서드와 속성을 자유롭게 사용할 수 있지만, 데이터베이스에 영구적으로 저장되지는 않습니다.
