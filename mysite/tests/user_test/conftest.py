@@ -3,7 +3,7 @@ from django.conf import settings
 from tests.user_test.factories import UserFactory
 from tests.recipe_test.factories import RecipeFactory, IngredientFactory
 from faker import Faker
-# 실제 db에 접근 시
+# 실제 db에 접근 시 데이터 다사라짐
 # @pytest.fixture(scope='session')
 # def django_db_setup():
 #     settings.DATABASES['default'] = {
@@ -14,7 +14,7 @@ from faker import Faker
 #         "HOST":"localhost",
 #         "PORT":"3306",
 #         'ATOMIC_REQUESTS': True,
-#     }
+#     } 
 
 # @pytest.fixture
 # def basic_user():
