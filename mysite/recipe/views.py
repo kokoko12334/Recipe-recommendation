@@ -1,13 +1,27 @@
-from rest_framework.decorators import action
 from rest_framework.response import Response
-from rest_framework import viewsets
+from rest_framework import viewsets, status
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.pagination import PageNumberPagination
+from rest_framework.decorators import action
 from recipe.models import Recipe, Ingredient, RecipeIngredientRelation
 from recipe.serializers import RecipeSerializer, IngredientSerializer, RecipeIngredientRelationSerializer
+from recipe.service import get_recipe_recommand
+from django.shortcuts import render,redirect
+import pandas as pd
+import json
 
-class RecipePagination(PageNumberPagination): # 👈 PageNumberPagination 상속
+ingre_df = pd.read_csv("data/ingre_v2.csv", index_col= False)
+ingre_data = ingre_df['ingre'].tolist()
+
+def recipe_page(request):
+    global ingre_data
+    if 'access_allowed' not in request.session:
+        return redirect('/')
+      
+    return render(request, 'recipe_page.html',{'ingre_data': json.dumps(ingre_data)})
+
+class RecipePagination(PageNumberPagination): # PageNumberPagination 상속
     page_size = 20
 
 class RecipeViewSet(viewsets.ModelViewSet):
@@ -16,8 +30,8 @@ class RecipeViewSet(viewsets.ModelViewSet):
     serializer_class = RecipeSerializer
     pagination_class = RecipePagination
 
-    authentication_classes = [SessionAuthentication, BasicAuthentication]
-    permission_classes = [IsAuthenticated]
+    # authentication_classes = [SessionAuthentication, BasicAuthentication]
+    # permission_classes = [IsAuthenticated]
 
     #,커스텀 엔드포인트 작성 함수이름이 자동으로 엔드포인트가 됨 detail=True면 id키 받고 아니면 전체리스트(list)
     # @action(detail=False, methods=["post"],url_path="create_with_prepared_ingredients/(?P<ingre>\d+)")  #커스텀action에 인자 넣고싶을때
@@ -73,23 +87,23 @@ class RecipeViewSet(viewsets.ModelViewSet):
         data = {"ingredients": result[1]['recipe.RecipeIngredientRelation'], "recipe":result[1]['recipe.Recipe']}
         
         return Response(status=204, data=data)
+    
+    @action(detail=False, methods=['POST'])
+    def recipe_rec(self, request):
         
-
-    @action(detail=False,methods=["post"])
-    def custom_create(self, request, *args, **kwargs):
+        ingre = []
+        data = request.POST.get('ingredients')
+        if not data:
+            return redirect('/recipe_page')
         
+        parsed_data = json.loads(data)
+        for data in parsed_data:
+            for v in data.values():
+                ingre.append(v)
         
-        recipe = RecipeSerializer(data=request.data)
-        ingredients = request.data["preprocessed_ingredients"]
-        
-        result = RecipeAppService.recipe_create_with_ingredients(recipe=recipe, ingredients=ingredients) 
-        # result = 0
-        
-        b = RecipeSerializer(instance=result)
-        
-        return Response(status=200, data=b.data, content_type="application/json")
-        
-
+        recipe = get_recipe_recommand(ingre)
+        return Response({'data': recipe}, status=status.HTTP_200_OK)
+    
 class IngredientViewSet(viewsets.ModelViewSet):
     queryset = Ingredient.objects.all()
     serializer_class = IngredientSerializer

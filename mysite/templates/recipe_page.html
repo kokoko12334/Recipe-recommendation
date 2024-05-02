@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recipe Recommendation</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet">
+  
+  {% load static %}
+  <link rel="stylesheet" type="text/css" href="{% static 'css/recipe_page_styles.css' %}" />
+  {% load static %}
+  <link rel="stylesheet" type="text/css" href="{% static 'css/tagify.css' %}" />
+</head>
+<body>
+
+<!-- Banner -->
+<div class="jumbotron text-center banner">
+  <h1>레시피 추천</h1>
+</div>
+
+<!-- Main Content -->
+<div class="container">
+  <div class="row justify-content-center">
+    <!-- Ingredient Input -->
+    <div class="col-md-6">
+      <form id="ingre">
+        <div class="form-group">
+          <input name='ingredients' type="text" class="form-control" id="ingredients" placeholder="재료 입력하기">
+          <small id="recommendation" class="form-text text-muted"></small>
+          <button type="submit" class="btn btn-primary w-auto d-block mt-2">검색</button> <!-- Adjusted button width and center alignment -->
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Recipe Recommendations -->
+<div id="con" class="container mt-4">
+  <h2 class="text-center">Recipe Recommendations</h2>
+  <template id="recipeCardTemplate">
+    <div class="card">
+        <img class="card-img-top" alt="Recipe Image">
+        <div class="card-body">
+            <h5 class="card-title"></h5>
+            <p class="card-text"></p>
+            <p></p>
+            <a class="btn btn-primary">레시피 링크</a>
+        </div>
+    </div>
+</template>
+</div>
+
+<!-- Footer -->
+<footer class="footer mt-auto py-3 text-center">
+  <div class="container">
+    <span class="text-muted">© 2024 Recipe Recommendation</span>
+  </div>
+</footer>
+
+<!-- Bootstrap JS and dependencies -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script> var ingre_data = JSON.parse('{{ ingre_data|safe }}');</script>
+{% load static %}
+<script type="text/javascript" src="{% static 'js/recipe_page_script.js' %}"> </script>
+{% load static %}
+<script type="text/javascript" src="{% static 'js/tagify.js' %}"> </script>
+
+</body>
+</html>

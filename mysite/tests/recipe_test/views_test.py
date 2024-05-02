@@ -17,7 +17,7 @@ class TestRecipeView:
         url = reverse("recipe-list")
         response = self.client.get(path=url, content_type="application/json")
         n = len(instances)
-        # print(response.data)
+        # print(response.data.keys())
         assert response.status_code == 200
         for i in range(n):
             assert response.data[i]['id'] == instances[i].id
@@ -90,7 +90,7 @@ class TestIngredientView:
 
         assert response.status_code == 200
         for i in range(n):
-            assert response.data[i]['id'] == instances[i].id
+            assert response.data['results'][i]['id'] == instances[i].id
         
     def test_ingredient_detail(self, basic_ingredient): # 같은 팩토리라도 서로 다른 함수에서 실행되면 다시 생성됨.
         instance = basic_ingredient

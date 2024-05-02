@@ -1,36 +1,28 @@
 from django.shortcuts import render
-from django.http import StreamingHttpResponse
 from django.contrib.auth import authenticate, login
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 
 from rest_framework import viewsets, status
-from rest_framework.decorators import api_view, action
+from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from user.serializers import CustomUserSchema, CustomUserDetailSchema, CustomUserRequestSchema, LikesSerializer
 from user.models import CustomUser
 from recipe.models import Recipe
 
-import time
 import json
 # from django.contrib.sessions.models import Session
 
-
-
 def main_page(request):
-
     return render(request,'index.html')
 
-@api_view(['GET',])
-def test(request):
-    print("request")
-    # time.sleep(100)
-    def stream():
-        for i in range(1, 101):
-            yield str(i) + '\n'  # 각 숫자를 개행 문자와 함께 스트리밍합니다.
-            time.sleep(0.1)  # 각 데이터를 보내기 전에 잠시 대기합니다.
-
-    response = StreamingHttpResponse(stream(), content_type='text/plain')
-    return response
+@csrf_exempt
+def set_access(request):
+    if request.method == 'POST':
+        request.session['access_allowed'] = True
+        return JsonResponse({'status': 'success'})
+    return JsonResponse({'status': 'error'}, status=400)
 
 class CustomUserViewSet(viewsets.ModelViewSet):
     queryset = CustomUser.objects.all()

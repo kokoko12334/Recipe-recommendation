@@ -1,0 +1,14 @@
+/* Styling for banner */
+.banner {
+    background-color: #FFA500; /* Orange color */
+    color: white;
+  }
+/* Styling for footer */
+.footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: #333; /* Dark grey color */
+  color: white;
+}

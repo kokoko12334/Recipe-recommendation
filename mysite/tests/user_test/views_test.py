@@ -22,8 +22,9 @@ class TestUserView:
         n = len(user_instances)
 
         assert response.status_code == 200
+        
         for i in range(n):
-            assert response.data[i]['id'] == user_instances[i].id
+            assert response.data['results'][i]['id'] == user_instances[i].id
         
     def test_user_detail(self, basic_user): # 같은 팩토리라도 서로 다른 함수에서 실행되면 다시 생성됨.
         user_instance = basic_user

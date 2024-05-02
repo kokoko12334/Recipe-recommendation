@@ -4,8 +4,8 @@ from drf_spectacular.views import SpectacularJSONAPIView
 from drf_spectacular.views import SpectacularRedocView
 from drf_spectacular.views import SpectacularSwaggerView
 from drf_spectacular.views import SpectacularYAMLAPIView
-from user.views import main_page, CustomUserViewSet, test
-from recipe.views import RecipeViewSet, IngredientViewSet
+from user.views import main_page, set_access,CustomUserViewSet
+from recipe.views import RecipeViewSet, IngredientViewSet, recipe_page
 from rest_framework import routers
 
 router = routers.DefaultRouter()
@@ -15,6 +15,8 @@ router.register(prefix='ingredients', viewset=IngredientViewSet, basename="ingre
 
 urlpatterns = [
     path("", main_page, name="main_page"),
+    path("recipe_page/", recipe_page, name="recipe_page"),
+    path('set_access/', set_access, name='set_access'),
     # Open API 자체를 조회 : json, yaml, 
     path("docs/json/", SpectacularJSONAPIView.as_view(), name="schema-json"),
     path("docs/yaml/", SpectacularYAMLAPIView.as_view(), name="swagger-yaml"),
@@ -23,5 +25,4 @@ urlpatterns = [
     path("docs/redoc/", SpectacularRedocView.as_view(url_name="schema-json"), name="redoc",),
     path("admin/", admin.site.urls),
     path("", include(router.urls)),
-    path("test/",test)
 ]
