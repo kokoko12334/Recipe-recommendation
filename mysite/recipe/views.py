@@ -100,8 +100,9 @@ class RecipeViewSet(viewsets.ModelViewSet):
         for data in parsed_data:
             for v in data.values():
                 ingre.append(v)
-        
-        recipe = get_recipe_recommand(ingre)
+                
+        n = 60
+        recipe = get_recipe_recommand(ingre, n)
         return Response({'data': recipe}, status=status.HTTP_200_OK)
     
 class IngredientViewSet(viewsets.ModelViewSet):

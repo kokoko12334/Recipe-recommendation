@@ -5,7 +5,7 @@ import chromadb
 client = chromadb.PersistentClient(path="./chroma")
 collection = client.get_collection(name="test")
 
-def get_recipe_recommand(ingre):
+def get_recipe_recommand(ingre,n):
 
     portion = cal_weight(ingre)
     v = cal_vector(ingre, portion).reshape(1,3072)
@@ -13,7 +13,7 @@ def get_recipe_recommand(ingre):
 
     result=collection.query(
         query_embeddings=normalized_data,
-        n_results=50,
+        n_results=n,
 
     )
     ids = result['ids'][0]

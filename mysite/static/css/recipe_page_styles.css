@@ -1,8 +1,10 @@
 /* Styling for banner */
 .banner {
-    background-color: #FFA500; /* Orange color */
-    color: white;
-  }
+  background-image: url('/static/no_image.jpg');
+  background-size: 30%;
+  background-position: center top 30%; /* 배경 이미지를 가운데 정렬하고, 상단 40% 위치에 배치 */
+  color: #fff; /* 텍스트 색상을 흰색으로 설정 */
+}
 /* Styling for footer */
 .footer {
   position: fixed;
