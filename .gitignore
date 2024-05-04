@@ -1,4 +1,5 @@
 __pycache__/
 .pytest_cache/
 /mysite/chroma
+/mysite/data/ingre_vector.pk
 gitgit.txt
