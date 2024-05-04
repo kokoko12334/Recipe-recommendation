@@ -2,15 +2,45 @@
 .banner {
   background-image: url('/static/no_image.jpg');
   background-size: 30%;
-  background-position: center top 30%; /* 배경 이미지를 가운데 정렬하고, 상단 40% 위치에 배치 */
-  color: #fff; /* 텍스트 색상을 흰색으로 설정 */
+  background-position: center top 30%;
+  /* 배경 이미지를 가운데 정렬하고, 상단 40% 위치에 배치 */
+  color: #fff;
+  /* 텍스트 색상을 흰색으로 설정 */
 }
+
 /* Styling for footer */
 .footer {
   position: fixed;
   bottom: 0;
   left: 0;
   width: 100%;
-  background-color: #333; /* Dark grey color */
+  background-color: #333;
+  /* Dark grey color */
   color: white;
+}
+
+.loader {
+  border: 16px solid #f3f3f3;
+  /* Light grey */
+  border-top: 16px solid #df6615;
+  /* Blue */
+  border-radius: 50%;
+  width: 120px;
+  height: 120px;
+  animation: spin 2s linear infinite;
+  position:fixed;
+  top:50%;
+  left:50%;
+  transform: translate(-50%,-50%);
+  display: none;
+}
+
+@keyframes spin {
+  0% {
+    transform:translate(-50%,-50%) rotate(0deg);
+  }
+
+  100% {
+    transform:translate(-50%,-50%) rotate(360deg);
+  }
 }

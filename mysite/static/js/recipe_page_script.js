@@ -78,6 +78,14 @@ $(document).ready(function () {
     document.getElementById('ingre').addEventListener('submit', function (event) {
         event.preventDefault(); // 기본 제출 동작 방지
 
+        
+        var cardRow = $('#cardRow');
+        cardRow.empty(); // 기존 카드 모두 제거
+        var footer = document.querySelector(".footer");
+        footer.style.position = "fixed";
+        var loader = document.querySelector('.loader');
+        loader.style.display = 'block';
+        
         var formData = new FormData(this); // 폼 데이터 생성
 
         fetch('/recipes/recipe_rec/', {
@@ -92,8 +100,8 @@ $(document).ready(function () {
             })
             .then(data => {
                 // console.log('Success:', data);
-                var cardRow = $('#cardRow');
-                cardRow.empty(); // 기존 카드 모두 제거
+                // var cardRow = $('#cardRow');
+                
                 var recipes = data.data;
 
                 var ingredientsInput = document.getElementById('ingredients');
@@ -108,6 +116,7 @@ $(document).ready(function () {
                 });
                 input_set = new Set(extractedValues)
 
+                loader.style.display = 'none';
                 for (let i = 0; i < recipes.length; i++) {
                     var card = createRecipeCard(recipes[i], input_set);
                     cardRow.append(card);
