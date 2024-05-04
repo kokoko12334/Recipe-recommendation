@@ -17,19 +17,19 @@ function createRecipeCard(recipe, extractedValues) {
 
     ingre_str = recipe.ingre.slice(1, -1).trim();
     var ingreArray = ingre_str.split(","); // 재료 배열로 분할
-    
+
     ingreArray.forEach(function (ingreItem) {
-        var ingre_string = ingreItem.trim().replaceAll('\'','')
+        var ingre_string = ingreItem.trim().replaceAll('\'', '')
         var ingreElement = $('<span>').text(ingre_string).addClass('lightext'); // 재료 항목 생성
         if (input_set.has(ingre_string)) {
-            ingreElement.css("background","linear-gradient(to top, #bfffa1 100%, transparent 40%)"); // 레시피 재료와 일치하는 경우 굵은 글씨로 설정
+            ingreElement.css("background", "linear-gradient(to top, #bfffa1 100%, transparent 40%)"); // 레시피 재료와 일치하는 경우 굵은 글씨로 설정
         }
         cardText.append(ingreElement).append(' '); // 재료 항목 추가
     });
 
 
 
-    var cardserving = $('<p>').text(`${recipe.serving}인분`).css('align-self', 'flex-end').css('margin-bottom', '0');
+    var cardserving = $('<p>').text(recipe.serving).css('align-self', 'flex-end').css('margin-bottom', '0');
     var cardLink = $('<a>').addClass('btn btn-primary mt-auto').attr('href', recipe.url).text('레시피 링크').css('align-self', 'flex-end');
 
     cardBody.append(cardTitle, cardText, cardserving, cardLink);
@@ -59,6 +59,7 @@ function adjustFooterPosition() {
 $(document).ready(function () {
 
     var input = document.querySelector('input[name=ingredients]');
+    var rangeBar = document.querySelector('.range');
 
     var tagify = new Tagify(input, {
         whitelist: ingre_data,
@@ -71,37 +72,99 @@ $(document).ready(function () {
             position: "text",         // place the dropdown near the typed text
             closeOnSelect: false,          // keep the dropdown open after selecting a suggestion
             highlightFirst: true,
-        }
+        },
+        
     });
 
+    tagify.on('add', function(e) {
+        
+        var tagText = e.detail.data.value; // 추가된 태그의 텍스트
+        var tagId = 'tag-' + tagText.replace(/\s+/g, '-').toLowerCase(); // 공백을 '-'로 대체하고 소문자로 변환하여 ID 생성
+        var container = document.createElement('div');
+        container.className = 'tag-range-container';
+        container.id = tagId; // 고유 ID 설정
+
+        var label = document.createElement('span');
+        label.className = 'label';
+        label.textContent = tagText;
+
+        var rangeInput = document.createElement('input');
+        rangeInput.type = 'range';
+        rangeInput.name = 'points';
+        rangeInput.min = '0';
+        rangeInput.max = '5';
+        rangeInput.step = '0.1';
+
+        var rangeValue = document.createElement('span');
+        rangeValue.className = 'range-value';
+        rangeValue.textContent = '1.0';
+
+        rangeInput.addEventListener('input', function() {
+            var value = parseFloat(rangeInput.value);
+            var displayValue = 0.5 + (value / 10);
+            rangeValue.textContent = displayValue.toFixed(1);
+        });
+
+        container.appendChild(label);
+        container.appendChild(rangeInput);
+        container.appendChild(rangeValue);
+        rangeBar.appendChild(container);
+    });
+
+    // 태그가 삭제될 때 관련 요소도 삭제
+    tagify.on('remove', function(e) {
+        var tagText = e.detail.data.value;
+        var tagId = 'tag-' + tagText.replace(/\s+/g, '-').toLowerCase();
+        var container = document.getElementById(tagId);
+        if (container) {
+            container.parentNode.removeChild(container);
+        }
+    });
 
     document.getElementById('ingre').addEventListener('submit', function (event) {
         event.preventDefault(); // 기본 제출 동작 방지
 
-        
+
         var cardRow = $('#cardRow');
         cardRow.empty(); // 기존 카드 모두 제거
         var footer = document.querySelector(".footer");
         footer.style.position = "fixed";
         var loader = document.querySelector('.loader');
         loader.style.display = 'block';
-        
-        var formData = new FormData(this); // 폼 데이터 생성
 
+        var formData = new FormData(this); // 폼 데이터 생성
+        
+        var outputData = [];
+
+        for (var pair of formData.entries()) {
+            if (pair[0] === 'ingredients') {
+                var tags = JSON.parse(pair[1]);
+                tags.forEach(tag => {
+                    var tagId = 'tag-' + tag.value.replace(/\s+/g, '-').toLowerCase();
+                    var container = document.getElementById(tagId);
+                    if (container) {
+                        var rangeValue = container.querySelector('.range-value').textContent;
+                        outputData.push({values: tag.value, range: parseFloat(rangeValue)});
+                    }
+                });
+            }
+        }
+        
         fetch('/recipes/recipe_rec/', {
             method: 'POST',
-            body: formData
-        })
-            .then(response => {
+            headers: {
+                'Content-Type': 'application/json'
+              },
+            body: JSON.stringify(outputData),
+        }).then(response => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
                 return response.json();
-            })
-            .then(data => {
+            }).then(data => {
                 // console.log('Success:', data);
                 // var cardRow = $('#cardRow');
-                
+
                 var recipes = data.data;
 
                 var ingredientsInput = document.getElementById('ingredients');

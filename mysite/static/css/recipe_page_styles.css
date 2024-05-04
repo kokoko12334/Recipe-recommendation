@@ -2,22 +2,13 @@
 .banner {
   background-image: url('/static/no_image.jpg');
   background-size: 30%;
-  background-position: center top 30%;
+  background-position: center top 35%;
   /* 배경 이미지를 가운데 정렬하고, 상단 40% 위치에 배치 */
   color: #fff;
   /* 텍스트 색상을 흰색으로 설정 */
 }
 
 /* Styling for footer */
-.footer {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  background-color: #333;
-  /* Dark grey color */
-  color: white;
-}
 
 .loader {
   border: 16px solid #f3f3f3;
@@ -43,4 +34,44 @@
   100% {
     transform:translate(-50%,-50%) rotate(360deg);
   }
+}
+
+
+.label {
+  margin: 5px;
+  padding: 5px;
+  background-color: #f0f0f0;
+  border-radius: 5px;
+  display: inline-block;
+  text-align: right; /* 중앙 정렬 */
+  width: 45%; /* 전체 너비 사용 */
+}
+.range {
+  margin-top: 20px;
+  text-align: center;
+}
+.tag-range-container {
+  margin-top: 10px;
+  display: flex;
+  text-align: right;
+  align-items: center; /* 세로 중앙 정렬 */
+}
+.range-value {
+  margin-left: 10px; /* 슬라이더와 값 사이의 간격 */
+}
+body {
+  font-family: 'Roboto', sans-serif;
+}
+
+.custom-border {
+  border: 2px solid #e95f1f; /* 부스트랩의 기본 파란색을 사용 */
+  border-radius: 10px; /* 경계를 둥글게 만듭니다. */
+  padding: 20px; /* 안쪽 여백을 추가합니다. */
+  margin-bottom: 20px; /* 아래쪽 여백을 추가합니다. */
+}
+
+.text-center {
+  text-align: center !important;
+  margin-top: 50px; 
+  margin-bottom: 30px;
 }

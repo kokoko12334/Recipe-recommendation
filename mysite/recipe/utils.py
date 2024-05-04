@@ -2,30 +2,21 @@ import numpy as np
 import pickle
 import pandas as pd
 
-df_ingre = pd.read_csv("data/ingre_v2.csv", index_col=False)
-df = pd.read_csv("data/recipe_v5.csv")
+df = pd.read_csv("data/recipe_v11.csv", index_col=False)
 with open('data/ingre_vector.pk', 'rb') as f:
     vector = pickle.load(f)
 
-def cal_weight(ingre):
-    arr = np.array([])
-    for i in ingre:
-        r = df_ingre.loc[df_ingre['ingre'] == i,'tfidf'].iloc[0]
-        arr = np.append(arr, r)    
-    mean = arr.mean()
-    arr = arr * mean
-    
-    return arr
-
-def cal_vector(ingre, portion):
+def cal_vector(ingre, weight):
     n = len(ingre)
-    matrix = np.zeros((n,3072))
+    weight_sum = sum(weight)
+    weight_adj = [round(w/weight_sum,4) for w in weight]
+
+    matrix = np.zeros((n,1536))
     for i in range(n):
-        v = vector[ingre[i]] * portion[i]
+        v = vector[ingre[i]] * weight_adj[i]
         matrix[i] = v
     
     recipe_vector = matrix.sum(axis=0)/n
-
     return recipe_vector
 
 def get_detailed_recipe(ids):

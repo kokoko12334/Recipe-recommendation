@@ -8,11 +8,14 @@ from recipe.models import Recipe, Ingredient, RecipeIngredientRelation
 from recipe.serializers import RecipeSerializer, IngredientSerializer, RecipeIngredientRelationSerializer
 from recipe.service import get_recipe_recommand
 from django.shortcuts import render,redirect
-import pandas as pd
 import json
-
-ingre_df = pd.read_csv("data/ingre_v2.csv", index_col= False)
-ingre_data = ingre_df['ingre'].tolist()
+import pickle
+import pandas as pd
+from django.http import JsonResponse
+df = pd.read_csv("data/ingre_v2.csv", index_col=False)
+ingre_data = df['ingre'].to_list()
+# with open("data/ingre_list.pk","rb") as f:
+#     ingre_data = pickle.load(f)
 
 def recipe_page(request):
     global ingre_data
@@ -90,20 +93,21 @@ class RecipeViewSet(viewsets.ModelViewSet):
     
     @action(detail=False, methods=['POST'])
     def recipe_rec(self, request):
+
+        try:
+            parsed_data = json.loads(request.body)  # JSON 데이터 파싱
+            ingre = []
+            weight = []
+            for data in parsed_data:
+                ingre.append(data['values'])
+                weight.append(data['range'])
+
+            n = 60
+            recipe = get_recipe_recommand(ingre, weight, n)
+            return Response({'data': recipe}, status=status.HTTP_200_OK)
         
-        ingre = []
-        data = request.POST.get('ingredients')
-        if not data:
-            return redirect('/recipe_page')
-        
-        parsed_data = json.loads(data)
-        for data in parsed_data:
-            for v in data.values():
-                ingre.append(v)
-                
-        n = 60
-        recipe = get_recipe_recommand(ingre, n)
-        return Response({'data': recipe}, status=status.HTTP_200_OK)
+        except json.JSONDecodeError:
+            return JsonResponse({'error': 'Invalid JSON'}, status=400)
     
 class IngredientViewSet(viewsets.ModelViewSet):
     queryset = Ingredient.objects.all()

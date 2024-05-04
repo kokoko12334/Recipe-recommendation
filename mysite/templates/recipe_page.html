@@ -8,6 +8,7 @@
   <!-- Bootstrap CSS -->
   <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
 
   {% load static %}
   <link rel="stylesheet" type="text/css" href="{% static 'css/recipe_page_styles.css' %}" />
@@ -18,11 +19,10 @@
 </head>
 
 <body>
-
   <div class="loader"></div>
 
   <!-- Banner -->
-  <div class="jumbotron text-center banner">
+  <div class="jumbotron banner">
   </div>
 
   <!-- Main Content -->
@@ -42,13 +42,17 @@
     </div>
   </div>
 
-  <!-- Recipe Recommendations -->
-  <div class="container mt-4">
-    <h2 class="text-center">Recipe Recommendations</h2>
-    <div class="row" id="cardRow">
+  <div class="range">
+    <h3 class="text-center">재료비중</h>
+  </div>
+  <h2 class="text-center">Recipe Recommendations</h2>
+  <div class="container mt-4 custom-border">
+    <!-- Recipe Recommendations -->
+    <div class="container mt-4">
+      <div class="row" id="cardRow">
+      </div>
     </div>
   </div>
-
   <!-- Footer -->
   <footer class="footer mt-auto py-3 text-center">
     <div class="container">
