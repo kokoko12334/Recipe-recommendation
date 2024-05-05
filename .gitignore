@@ -3,4 +3,4 @@ __pycache__/
 /mysite/chroma
 /mysite/data/ingre_vector.pk
 gitgit.txt
-/config/.env
+/mysite/config
