@@ -7,20 +7,18 @@ from rest_framework.decorators import action
 from recipe.models import Recipe, Ingredient, RecipeIngredientRelation
 from recipe.serializers import RecipeSerializer, IngredientSerializer, RecipeIngredientRelationSerializer
 from recipe.service import get_recipe_recommand
-from django.shortcuts import render,redirect
+from django.shortcuts import render
 import json
-import pickle
 import pandas as pd
 from django.http import JsonResponse
+
 df = pd.read_csv("data/ingre_v2.csv", index_col=False)
 ingre_data = df['ingre'].to_list()
-# with open("data/ingre_list.pk","rb") as f:
-#     ingre_data = pickle.load(f)
 
 def recipe_page(request):
     global ingre_data
-    if 'access_allowed' not in request.session:
-        return redirect('/')
+    # if 'access_allowed' not in request.session:
+    #     return redirect('/')
       
     return render(request, 'recipe_page.html',{'ingre_data': json.dumps(ingre_data)})
 
