@@ -35,7 +35,7 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 SECURE_CROSS_ORIGIN_OPENER_POLICY = None
 
 
-hosts = os.getenv('ALLOWED_HOSTS').split(" ")
+hosts = os.getenv('ALLOWED_HOSTS').split(",")
 ALLOWED_HOSTS = hosts
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
