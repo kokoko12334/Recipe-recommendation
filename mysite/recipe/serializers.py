@@ -7,21 +7,6 @@ class RecipeSerializer(serializers.ModelSerializer):
         fields = "__all__"
         depth = 1
 
-    # @transaction.atomic
-    # def create(self, validated_data: dict[str, Any]) -> Recipe:
-    #     print(f"data:{validated_data}, type:{type(validated_data)}")
-    #     ingredients = validated_data["preprocessed_ingredients"]
-    #     validated_data.pop("preprocessed_ingredients", None)
-    #     recipe = Recipe()
-    #     for k,v in validated_data.items():
-    #         setattr(recipe,k,v)
-    #     recipe_done: Recipe = Recipe.objects.create(recipe)
-        
-    #     bulk_list = [[recipe_done, Ingredient.objects.get(ingredient=i)] for i in ingredients]
-    #     RecipeIngredientRelation.objects.bulk_create(bulk_list)
-        
-    #     return recipe_done
-
 class IngredientSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ingredient
