@@ -4,3 +4,4 @@ __pycache__/
 /mysite/data/ingre_vector.pk
 gitgit.txt
 /mysite/config
+db.sqlite3

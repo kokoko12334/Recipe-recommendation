@@ -1,8 +1,6 @@
 import numpy as np
 import pickle
-import pandas as pd
 
-df = pd.read_csv("data/recipe_v11.csv", index_col=False)
 with open('data/ingre_vector.pk', 'rb') as f:
     vector = pickle.load(f)
 
@@ -18,9 +16,3 @@ def cal_vector(ingre, weight):
     recipe_vector = matrix.sum(axis=0)/n
     return recipe_vector
 
-def get_detailed_recipe(ids):
-    recipe = []
-    for id in ids:
-        recipe.append(df.iloc[int(id)].to_dict())
-
-    return recipe

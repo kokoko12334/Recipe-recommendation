@@ -12,12 +12,12 @@ function createRecipeCard(recipe, extractedValues) {
     });
 
     var cardBody = $('<div>').addClass('card-body d-flex flex-column');
-    var cardTitle = $('<h5>').addClass('card-title').text(recipe.name);
+    var cardTitle = $('<h5>').addClass('card-title').text(recipe.recipe_name);
     var cardText = $('<p>').addClass('card-text').css('flex-grow', '1');
 
-    ingre_str = recipe.ingre.slice(1, -1).trim();
-    var ingreArray = ingre_str.split(","); // 재료 배열로 분할
-
+    // ingre_str = recipe.ingre.slice(1, -1).trim();
+    // var ingreArray = ingre_str.split(","); // 재료 배열로 분할
+    var ingreArray = recipe.preprocessed_ingredients.map(item => item.ingredient);
     ingreArray.forEach(function (ingreItem) {
         var ingre_string = ingreItem.trim().replaceAll('\'', '')
         var ingreElement = $('<span>').text(ingre_string).addClass('lightext'); // 재료 항목 생성
@@ -166,7 +166,6 @@ $(document).ready(function () {
                 // var cardRow = $('#cardRow');
 
                 var recipes = data.data;
-
                 var ingredientsInput = document.getElementById('ingredients');
                 var ingredientsValue = ingredientsInput.value;
 
@@ -180,6 +179,7 @@ $(document).ready(function () {
                 input_set = new Set(extractedValues)
 
                 loader.style.display = 'none';
+                
                 for (let i = 0; i < recipes.length; i++) {
                     var card = createRecipeCard(recipes[i], input_set);
                     cardRow.append(card);

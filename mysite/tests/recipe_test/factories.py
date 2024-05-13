@@ -29,11 +29,9 @@ class RecipeFactory(factory.django.DjangoModelFactory):
     recipe_name = factory.Sequence(lambda n: "recipe{0}".format(n))
     ingredients_with_quantity = factory.Sequence(lambda n: "ingredient_with_quantity{0}".format(n))
     url = faker.url()
-    serving = faker.number()
+    serving = factory.Sequence(lambda n: "serving{0}".format(n))
     cnt = faker.number()
-    cluster = faker.number()
     image_url = faker.url()
-    tag = faker.number()
     
     @factory.post_generation
     def preprocessed_ingredients(self, create, extracted, **kwargs):

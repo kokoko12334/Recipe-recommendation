@@ -53,14 +53,6 @@ AUTHENTICATION_BACKENDS = [
 
 
 REST_FRAMEWORK = {
-    # # 토큰 인증관련(전역)
-    # 'DEFAULT_AUTHENTICATION_CLASSES': [
-    #     'rest_framework.authentication.SessionAuthentication',
-    #     'rest_framework.authentication.BasicAuthentication'
-    # ],
-    # 'DEFAULT_PERMISSION_CLASSES': [
-    #     'rest_framework.permissions.IsAuthenticated',
-    # ],
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
     'PAGE_SIZE': 100
@@ -130,12 +122,8 @@ WSGI_APPLICATION = "mysite.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.mysql",
-        "NAME": "drf_test1",
-        "USER":"root",
-        "PASSWORD":"7292",
-        "HOST":"localhost",
-        "PORT":"3306"
+        "ENGINE": 'django.db.backends.sqlite3',
+        "NAME": os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
 

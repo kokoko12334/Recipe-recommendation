@@ -77,9 +77,11 @@ class RecipeViewSet(viewsets.ModelViewSet):
                 ingre.append(data['values'])
                 weight.append(data['range'])
 
-            n = 60
-            recipe = get_recipe_recommand(ingre=ingre, weight=weight, count=n)
-            return Response({'data': recipe}, status=status.HTTP_200_OK)
+            recommand_cnt = 60
+            recipes_queryset = get_recipe_recommand(ingre=ingre, weight=weight, count=recommand_cnt)
+            serializer = RecipeSerializer(recipes_queryset, many=True)
+
+            return JsonResponse({'data': serializer.data}, status=status.HTTP_200_OK)
         
         except json.JSONDecodeError:
             return JsonResponse({'error': 'Invalid JSON'}, status=400)
