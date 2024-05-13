@@ -6,7 +6,7 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.decorators import action
 from recipe.models import Recipe, Ingredient, RecipeIngredientRelation
 from recipe.serializers import RecipeSerializer, IngredientSerializer, RecipeIngredientRelationSerializer
-from recipe.service import get_recipe_recommand
+from recipe.service import get_recipe_recommands
 from django.shortcuts import render
 import json
 import pandas as pd
@@ -78,7 +78,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
                 weight.append(data['range'])
 
             recommand_cnt = 60
-            recipes_queryset = get_recipe_recommand(ingre=ingre, weight=weight, count=recommand_cnt)
+            recipes_queryset = get_recipe_recommands(ingre=ingre, weight=weight, count=recommand_cnt)
             serializer = RecipeSerializer(recipes_queryset, many=True)
 
             return JsonResponse({'data': serializer.data}, status=status.HTTP_200_OK)
