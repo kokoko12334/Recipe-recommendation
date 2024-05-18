@@ -124,32 +124,35 @@ $(document).ready(function () {
     document.getElementById('ingre').addEventListener('submit', function (event) {
         event.preventDefault(); // 기본 제출 동작 방지
 
-
-        var cardRow = $('#cardRow');
-        cardRow.empty(); // 기존 카드 모두 제거
-        var footer = document.querySelector(".footer");
-        footer.style.position = "fixed";
-        var loader = document.querySelector('.loader');
-        loader.style.display = 'block';
-
         var formData = new FormData(this); // 폼 데이터 생성
         
         var outputData = [];
 
         for (var pair of formData.entries()) {
             if (pair[0] === 'ingredients') {
-                var tags = JSON.parse(pair[1]);
-                tags.forEach(tag => {
-                    var tagId = 'tag-' + tag.value.replace(/\s+/g, '-').toLowerCase();
-                    var container = document.getElementById(tagId);
-                    if (container) {
-                        var rangeValue = container.querySelector('.range-value').textContent;
-                        outputData.push({values: tag.value, range: parseFloat(rangeValue)});
-                    }
-                });
+                if (!pair[1]) {
+                    alert('입력칸이 비었습니다.');
+                    return;
+                }
+        
+                try {
+                    var tags = JSON.parse(pair[1]);
+                    tags.forEach(tag => {
+                        var tagId = 'tag-' + tag.value.replace(/\s+/g, '-').toLowerCase();
+                        var container = document.getElementById(tagId);
+                        if (container) {
+                            var rangeValue = container.querySelector('.range-value').textContent;
+                            outputData.push({values: tag.value, range: parseFloat(rangeValue)});
+                        }
+                    });
+                } catch (e) {
+                    alert('Invalid JSON input for ingredients.');
+                    return;
+                }
             }
         }
-        
+        var loader = document.querySelector('.loader');
+        loader.style.display = 'block';
         fetch('/recipes/recipe_rec/', {
             method: 'POST',
             headers: {
@@ -164,7 +167,10 @@ $(document).ready(function () {
             }).then(data => {
                 // console.log('Success:', data);
                 // var cardRow = $('#cardRow');
-
+                var cardRow = $('#cardRow');
+                cardRow.empty(); // 기존 카드 모두 제거
+                var footer = document.querySelector(".footer");
+                footer.style.position = "fixed";
                 var recipes = data.data;
                 var ingredientsInput = document.getElementById('ingredients');
                 var ingredientsValue = ingredientsInput.value;
