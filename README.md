@@ -1,6 +1,6 @@
 # 파일/폴더 내용
 
-~~(http://recipe-dev.site/)~~ (무료버전 끝나서 옮길 예정)
+~~(http://recipe-dev.site/)~~ (기간 끝나서 옮길 예정)
 
 
 1. `chroma`: 레시피 임베딩 벡터 저장공간
