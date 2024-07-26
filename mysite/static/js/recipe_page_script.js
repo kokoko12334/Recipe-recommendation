@@ -73,11 +73,11 @@ $(document).ready(function () {
             closeOnSelect: false,          // keep the dropdown open after selecting a suggestion
             highlightFirst: true,
         },
-        
+
     });
 
-    tagify.on('add', function(e) {
-        
+    tagify.on('add', function (e) {
+
         var tagText = e.detail.data.value; // 추가된 태그의 텍스트
         var tagId = 'tag-' + tagText.replace(/\s+/g, '-').toLowerCase(); // 공백을 '-'로 대체하고 소문자로 변환하여 ID 생성
         var container = document.createElement('div');
@@ -99,7 +99,7 @@ $(document).ready(function () {
         rangeValue.className = 'range-value';
         rangeValue.textContent = '1.0';
 
-        rangeInput.addEventListener('input', function() {
+        rangeInput.addEventListener('input', function () {
             var value = parseFloat(rangeInput.value);
             var displayValue = 0.5 + (value / 10);
             rangeValue.textContent = displayValue.toFixed(1);
@@ -112,7 +112,7 @@ $(document).ready(function () {
     });
 
     // 태그가 삭제될 때 관련 요소도 삭제
-    tagify.on('remove', function(e) {
+    tagify.on('remove', function (e) {
         var tagText = e.detail.data.value;
         var tagId = 'tag-' + tagText.replace(/\s+/g, '-').toLowerCase();
         var container = document.getElementById(tagId);
@@ -125,7 +125,7 @@ $(document).ready(function () {
         event.preventDefault(); // 기본 제출 동작 방지
 
         var formData = new FormData(this); // 폼 데이터 생성
-        
+
         var outputData = [];
 
         for (var pair of formData.entries()) {
@@ -134,7 +134,7 @@ $(document).ready(function () {
                     alert('입력칸이 비었습니다.');
                     return;
                 }
-        
+
                 try {
                     var tags = JSON.parse(pair[1]);
                     tags.forEach(tag => {
@@ -142,7 +142,7 @@ $(document).ready(function () {
                         var container = document.getElementById(tagId);
                         if (container) {
                             var rangeValue = container.querySelector('.range-value').textContent;
-                            outputData.push({values: tag.value, range: parseFloat(rangeValue)});
+                            outputData.push({ values: tag.value, range: parseFloat(rangeValue) });
                         }
                     });
                 } catch (e) {
@@ -157,42 +157,50 @@ $(document).ready(function () {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
-              },
+            },
             body: JSON.stringify(outputData),
         }).then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            }).then(data => {
-                // console.log('Success:', data);
-                // var cardRow = $('#cardRow');
-                var cardRow = $('#cardRow');
-                cardRow.empty(); // 기존 카드 모두 제거
-                var footer = document.querySelector(".footer");
-                footer.style.position = "fixed";
-                var recipes = data.data;
-                var ingredientsInput = document.getElementById('ingredients');
-                var ingredientsValue = ingredientsInput.value;
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        }).then(data => {
+            // console.log('Success:', data);
+            // var cardRow = $('#cardRow');
+            var cardRow = $('#cardRow');
+            cardRow.empty(); // 기존 카드 모두 제거
+            var footer = document.querySelector(".footer");
+            footer.style.position = "fixed";
+            var recipes = data.data;
+            var ingredientsInput = document.getElementById('ingredients');
+            var ingredientsValue = ingredientsInput.value;
 
-                // JSON 문자열을 JavaScript 객체로 파싱
-                var parsedValue = JSON.parse(ingredientsValue);
+            // JSON 문자열을 JavaScript 객체로 파싱
+            var parsedValue = JSON.parse(ingredientsValue);
 
-                // "value" 키의 값만을 추출하여 새로운 배열에 저장
-                var extractedValues = parsedValue.map(function (item) {
-                    return item.value;
-                });
-                input_set = new Set(extractedValues)
+            // "value" 키의 값만을 추출하여 새로운 배열에 저장
+            var extractedValues = parsedValue.map(function (item) {
+                return item.value;
+            });
+            input_set = new Set(extractedValues)
 
-                loader.style.display = 'none';
-                
-                for (let i = 0; i < recipes.length; i++) {
-                    var card = createRecipeCard(recipes[i], input_set);
-                    cardRow.append(card);
-                }
-                adjustFooterPosition();
+            loader.style.display = 'none';
 
-            })
+
+            const jsonString = "['어묵', '김밥용김', '당면', '양파', '당근', '깻잎', '튀김가루', '올리브유', '간장', '참기름']";
+
+            // 주어진 문자열의 작은따옴표를 큰따옴표로 변경
+            const correctedJsonString = jsonString.replace(/'/g, '"');
+            const array = JSON.parse(correctedJsonString);
+            console.log(array);
+            for (let i = 0; i < recipes.length; i++) {
+
+                var card = createRecipeCard(recipes[i], input_set);
+                cardRow.append(card);
+            }
+            adjustFooterPosition();
+
+        })
             .catch(error => {
                 console.error('Error:', error);
             });

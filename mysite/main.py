@@ -2,70 +2,143 @@
 # import django
 # os.environ.setdefault("DJANGO_SETTINGS_MODULE", "mysite.settings")
 # django.setup()
-# import pandas as pd
-# from recipe.models import Recipe, Ingredient, RecipeIngredientRelation
-# from tqdm import tqdm
+# import pickle
+import pandas as pd
+import numpy as np
+import chromadb
+from chromadb.utils.batch_utils import create_batches
+from tqdm import tqdm
+import pickle
+from sklearn.preprocessing import normalize
+import time
+df = pd.read_csv("", index_col= False)
 
-# recipe_df = pd.read_csv("data/recipe_v11.csv", index_col=False)
-# ingre_df = pd.read_csv("data/ingre_v2.csv", index_col=False)
+df.head()
+
+client = chromadb.PersistentClient(path="./chroma")
+collection = client.get_collection(name="test")
+
+# client.delete_collection('recipes')
+client2 = chromadb.PersistentClient(path="D:/chroma")
+collection2 = client2.get_or_create_collection(
+    name="recipes",
+    metadata={
+        "hnsw:space": "cosine",
+        "hnsw:construction_ef": 50,
+        "hnsw:M": 32,
+        "hnsw:search_ef": 20, 
+              }
+    )
 
 
-# ingre_set = set()
-
-# for i in tqdm(range(len(recipe_df))):
-#     ingres = eval(recipe_df.iloc[i]['ingre'])
-#     for ingre in ingres:
-#         ingre_set.add(ingre)
-
-# print(len(ingre_set))
+#M을 32, efConstruction을 50, efSearch를 17
+result = collection.get(include=['embeddings'])
 
 
-# ingre_list = list(ingre_set)
-# ingre_n = len(ingre_list)
-# ingre_lst = []
-# for i in range(ingre_n):
-#     obj = Ingredient(ingredient=ingre_list[i])
-#     ingre_lst.append(obj)
-
-# Ingredient.objects.bulk_create(ingre_lst)
+print(len(result['ids']))
+print(result['embeddings'][0])
 
 
-# recipe_list = []
-# recipe_n = len(recipe_df)
-# for i in tqdm(range(recipe_n)):
-#     obj = Recipe(
-#         recipe_name=recipe_df.iloc[i]['name'],
-#         url=recipe_df.iloc[i]['url'],
-#         serving=recipe_df.iloc[i]['serving'],
-#         cnt=0,
-#         image_url=recipe_df.iloc[i]['image_url'],
-#         )
-#     recipe_list.append(obj)
+#name,ingre,image_url,ck_mth,ck_knd,serving,url
+ids = result['ids']
+metadatas = []
+embeddings = result['embeddings']
 
-# Recipe.objects.bulk_create(recipe_list)
+large_array = np.empty((183813, 1536), dtype=np.float64)
 
-# objs = Ingredient.objects.all()
-# dic = dict()
+for i in range(len(ids)):
+    large_array[i] = np.array(embeddings[i],dtype=np.float64)
 
-# for i in objs:
-#     dic[i.ingredient] = i.pk
+for i in ids:
+    i = int(i)
+    dic = {
+        'name':df.iloc[i]['name'],
+        'ingre':df.iloc[i]['ingre'],
+        'image_url':df.iloc[i]['image_url'],
+        'url':df.iloc[i]['url']
+    }    
+    metadatas.append(dic)
+
+print(len(metadatas))
+print(metadatas[:5])
+print(len(ids))
+print(ids[:5])
+print(len(large_array))
+print(large_array[:5])
+
+# result['embeddings'][2]
+# collection.get(ids=['10'], include=['embeddings'])
+# large_array[2]
+
+
+# collection2.add(
+#     embeddings=embeddings,
+#     metadatas=metadatas,
+#     ids=ids,
+# )
+
+batches = create_batches(api=client2, ids=ids, embeddings=embeddings, metadatas=metadatas)
+
+
+for batch in tqdm(batches):
+    print(f"Adding batch of size {len(batch[0])}")
+    collection2.add(ids=batch[0],
+                   embeddings=batch[1],
+                   metadatas=batch[2],
+)
     
-# fk_list = []
-# # len(recipe_df)
-# for i in tqdm(range(len(recipe_df))):
-#     ingres = eval(recipe_df.iloc[i]['ingre'])
-#     recipe_obj = Recipe.objects.get(id=i+1)
+
+client2 = chromadb.PersistentClient(path="D:/chroma")
+collection2 = client2.get_collection('recipes')
+
+
+collection2.get(ids=['0'], include=['embeddings', 'metadatas'])
+
+
+with open('data/ingre_vector.pk', 'rb') as f:
+    vector = pickle.load(f)
+
+ingre = ['간장', '식초', '고춧가루', '참기름', '깨소금', '대파']
+weight = [1, 1, 1, 1, 1, 1, 1]
+
+def cal_vector(ingre, weight):
+    n = len(ingre)
+    weight_sum = sum(weight)
+    weight_adj = [round(w / weight_sum, 4) for w in weight]
+    matrix = np.zeros((n,1536))
+    for i in range(n):
+        v = vector[ingre[i]] * weight_adj[i]
+        matrix[i] = v
     
-#     for j in range(len(ingres)):
-#         ingre = ingres[j]
-#         ingre_obj = Ingredient.objects.get(id=dic[ingre])
-        
-#         relation = RecipeIngredientRelation(recipe=recipe_obj, ingredient=ingre_obj)
-        
-#         fk_list.append(relation)
-# print(len(fk_list))
-
-# RecipeIngredientRelation.objects.bulk_create(fk_list)
+    recipe_vector = matrix.sum(axis=0)/n
+    return recipe_vector
 
 
-# RecipeIngredientRelation.objects.all().delete()
+
+embedding = cal_vector(ingre=ingre, weight=weight).reshape(1,1536)
+normalized_data = normalize(embedding, norm='l2')
+
+
+s = time.time()
+result = collection.query(
+    query_embeddings=normalized_data,
+    n_results= 60
+
+)
+e = time.time()
+print(f"{e-s}초")
+
+s = time.time()
+results2 = collection2.query(
+    query_embeddings=normalized_data,
+    n_results= 60
+)
+e = time.time()
+print(f"{e-s}초")
+
+
+collection2.metadata
+
+result
+
+results2['metadatas'][0]

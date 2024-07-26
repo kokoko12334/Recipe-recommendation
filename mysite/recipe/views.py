@@ -11,6 +11,7 @@ from django.shortcuts import render
 import json
 import pandas as pd
 from django.http import JsonResponse
+import time
 
 df = pd.read_csv("data/ingre_v2.csv", index_col=False)
 ingre_data = df['ingre'].to_list()
@@ -80,7 +81,6 @@ class RecipeViewSet(viewsets.ModelViewSet):
             recommand_cnt = 60
             recipes_queryset = get_recipe_recommands(ingre=ingre, weight=weight, count=recommand_cnt)
             serializer = RecipeSerializer(recipes_queryset, many=True)
-
             return JsonResponse({'data': serializer.data}, status=status.HTTP_200_OK)
         
         except json.JSONDecodeError:

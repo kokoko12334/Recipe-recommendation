@@ -1,6 +1,5 @@
 from recipe.utils import cal_vector
 from recipe.models import Recipe
-from sklearn.preprocessing import normalize
 import chromadb
 import numpy as np
 
@@ -9,10 +8,9 @@ collection = client.get_collection(name="test")
 collection.query(query_embeddings=np.zeros((1, 1536)) ,n_results=1)
 
 def get_recipe_recommands(ingre, weight, count):
-    v = cal_vector(ingre, weight).reshape(1,1536)
-    normalized_data = normalize(v, norm='l2')
+    recipe_vector = cal_vector(ingre, weight)
     result=collection.query(
-        query_embeddings=normalized_data,
+        query_embeddings=recipe_vector,
         n_results=count,
     )
     ids = [int(i)+1 for i in result['ids'][0]]

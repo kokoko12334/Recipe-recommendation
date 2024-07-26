@@ -1,5 +1,6 @@
 import numpy as np
 import pickle
+from sklearn.preprocessing import normalize
 
 with open('data/ingre_vector.pk', 'rb') as f:
     vector = pickle.load(f)
@@ -13,5 +14,6 @@ def cal_vector(ingre, weight):
         v = vector[ingre[i]] * weight_adj[i]
         matrix[i] = v
     
-    recipe_vector = matrix.sum(axis=0)/n
-    return recipe_vector
+    recipe_vector = (matrix.sum(axis=0)/n)
+    
+    return normalize(recipe_vector.reshape(1,1536), norm='l2')
