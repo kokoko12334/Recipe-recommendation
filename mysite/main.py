@@ -137,8 +137,22 @@ e = time.time()
 print(f"{e-s}초")
 
 
-collection2.metadata
 
-result
 
-results2['metadatas'][0]
+
+# -*- coding: utf-8 -*-
+from openai import OpenAI
+import pandas as pd
+import asyncio
+import pickle
+import openai
+import chromadb
+import numpy as np
+
+
+
+client = chromadb.PersistentClient(path="D:/chroma")
+collection = client2.get_collection("recipes")
+
+# n = len(df)
+
