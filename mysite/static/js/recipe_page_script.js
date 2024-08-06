@@ -60,7 +60,6 @@ $(document).ready(function () {
 
     var input = document.querySelector('input[name=ingredients]');
     var rangeBar = document.querySelector('.range');
-
     var tagify = new Tagify(input, {
         whitelist: ingre_data,
         enforceWhitelist: true,
@@ -172,6 +171,8 @@ $(document).ready(function () {
             var footer = document.querySelector(".footer");
             footer.style.position = "fixed";
             var recipes = data.data;
+            console.log(data);
+            console.log(recipes);
             var ingredientsInput = document.getElementById('ingredients');
             var ingredientsValue = ingredientsInput.value;
 
@@ -192,7 +193,7 @@ $(document).ready(function () {
             // 주어진 문자열의 작은따옴표를 큰따옴표로 변경
             const correctedJsonString = jsonString.replace(/'/g, '"');
             const array = JSON.parse(correctedJsonString);
-            console.log(array);
+            // console.log(array);
             for (let i = 0; i < recipes.length; i++) {
 
                 var card = createRecipeCard(recipes[i], input_set);

@@ -15,6 +15,13 @@ import time
 
 df = pd.read_csv("data/ingre_v2.csv", index_col=False)
 ingre_data = df['ingre'].to_list()
+# import json
+
+
+# a = {'ingre_data':ingre_data}
+
+# with open("ingres.json", "w", encoding='utf-8') as f:
+#     json.dump(a, f)
 
 def recipe_page(request):
     global ingre_data
@@ -72,6 +79,8 @@ class RecipeViewSet(viewsets.ModelViewSet):
     def recipe_rec(self, request):
         try:
             parsed_data = json.loads(request.body)  # JSON 데이터 파싱
+            print(request)
+            print(parsed_data)
             ingre = []
             weight = []
             for data in parsed_data:
