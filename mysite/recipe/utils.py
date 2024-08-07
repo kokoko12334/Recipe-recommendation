@@ -2,7 +2,7 @@ import numpy as np
 import pickle
 from sklearn.preprocessing import normalize
 
-with open('data/ingre_vector.pk', 'rb') as f:
+with open('data/ingre_vector2.pk', 'rb') as f:
     vector = pickle.load(f)
 
 def cal_vector(ingre, weight):

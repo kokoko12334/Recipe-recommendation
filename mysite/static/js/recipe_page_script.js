@@ -18,6 +18,7 @@ function createRecipeCard(recipe, extractedValues) {
     // ingre_str = recipe.ingre.slice(1, -1).trim();
     // var ingreArray = ingre_str.split(","); // 재료 배열로 분할
     var ingreArray = recipe.preprocessed_ingredients.map(item => item.ingredient);
+    console.log(ingreArray);
     ingreArray.forEach(function (ingreItem) {
         var ingre_string = ingreItem.trim().replaceAll('\'', '')
         var ingreElement = $('<span>').text(ingre_string).addClass('lightext'); // 재료 항목 생성
@@ -151,6 +152,7 @@ $(document).ready(function () {
             }
         }
         var loader = document.querySelector('.loader');
+        console.log(outputData)
         loader.style.display = 'block';
         fetch('/recipes/recipe_rec/', {
             method: 'POST',
