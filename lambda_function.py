@@ -50,11 +50,16 @@ def lambda_handler(event, context):
     recipe_rec_list = []
     for i in range(len(matches)):
         metadata = matches[i]['metadata']
+        name = metadata['name'] if 'name' in metadata.keys() else '요리'
+        ingredients = metadata['ingre'] if 'ingre' in metadata.keys() else '재료'
+        url = metadata['url'] if 'url' in metadata.keys() else '링크없음'
+        image_url = metadata['image_url'] if 'image_url' in metadata.keys() else '이미지없음'
+
         recipe = {
-            'name': metadata['name'],
-            'ingredients': metadata['ingre'],
-            'url': metadata['url'],
-            'image_url':metadata['image_url']
+            'name': name,
+            'ingredients': ingredients,
+            'url': url,
+            'image_url': image_url
         }
         recipe_rec_list.append(recipe)
 
