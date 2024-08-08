@@ -6,6 +6,8 @@
 
 
 
+
+
 ## 🛠️기술
 
 > 백엔드
@@ -38,6 +40,8 @@ AWS Lambda, S3, APIGateway
 
 
 
+
+
 ### :timer_clock:개발 내역
 
 > 프로젝트 제작(2022.04 ~ 2022.06)
@@ -59,6 +63,8 @@ AWS Lambda, S3, APIGateway
 
 
 
+
+
 ## :file_folder: 주요 폴더/파일
 
 
@@ -66,6 +72,8 @@ AWS Lambda, S3, APIGateway
 2. `mysite/recipe`: 레시피 추천로직 관련
 3. `mysite/tests`: 유닛 테스트
 4. `lambda_function.py`: 서버리스 환경에서 실행되는 AWS람다함수
+
+
 
 
 
@@ -94,6 +102,8 @@ AWS Lambda, S3, APIGateway
 4. **상위 20개 레시피 추천**: 코사인 유사도가 가장 높은 상위 20개의 레시피를 추천합니다.<br>
 
 ![](./img/설명.png)
+
+
 
 
 
