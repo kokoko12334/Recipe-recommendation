@@ -5,8 +5,8 @@ import boto3
 from pinecone import Pinecone
 from typing import List
 
-BUCKET_NAME = 'ingre-vector'
-FILE_NAME = 'ingre_vector2.pk'
+BUCKET_NAME = 'bucket-name'
+FILE_NAME = 'filename'
 PINECONE_APIKEY = 'apikey'
 INDEX_NAME = 'recipe-index'
 
