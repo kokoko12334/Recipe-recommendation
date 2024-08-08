@@ -99,11 +99,7 @@ AWS Lambda, S3, APIGateway
 
 ## 🖥️ 배포 환경 아키텍처
 
-![](C:\Users\KMP\Downloads\aws레시피아키텍처.drawio.png)
-
-
-
-
+![](./img/AWS아키텍처.png)
 
 
 
