@@ -31,6 +31,7 @@ def cal_recipe_vector(ingre: List[str], weight: List[float]) -> List[float]:
     recipe_vector = matrix.sum(axis=0)/n
     return list(recipe_vector)
 
+# AWS lambda 함수
 def lambda_handler(event, context):
     req = event['input']
     ingre = []
@@ -41,7 +42,7 @@ def lambda_handler(event, context):
     
     query_vector = cal_recipe_vector(ingre=ingre, weight=weight)
 
-    # 쿼리벡터와 코사인 요사도 가장 높은 레시피 벡터 조회(top_k만큼)
+    # 쿼리벡터와 코사인유사도가 가장 높은 레시피 벡터 조회(top_k만큼)
     top_k = 20
     result = index.query(
         vector=query_vector,
@@ -50,7 +51,7 @@ def lambda_handler(event, context):
         include_metadata=True
     )
 
-    # 조회된 결과를 전처리
+    # 조회된 결과 전처리
     matches = result['matches']
     recipe_rec_list = []
     for i in range(len(matches)):
