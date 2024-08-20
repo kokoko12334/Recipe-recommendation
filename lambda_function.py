@@ -10,16 +10,20 @@ FILE_NAME = 'filename'
 PINECONE_APIKEY = 'apikey'
 INDEX_NAME = 'recipe-index'
 
+# Pinecone 벡터DB연결 및 인덱스 불러오기
 pc = Pinecone(api_key=PINECONE_APIKEY)
-s3 = boto3.resource('s3')
 index = pc.Index(INDEX_NAME)
+
+# s3에서 (재료-벡터)로 매핑된 데이터 불러오기
+s3 = boto3.resource('s3')
 ingre_vector = pickle.loads(s3.Bucket(BUCKET_NAME).Object(FILE_NAME).get()['Body'].read())
 
+# 입력한 재료(ingre), 가중치(weight)를 벡터로 변환시키는 함수
 def cal_recipe_vector(ingre: List[str], weight: List[float]) -> List[float]:
     n = len(ingre)
     weight_sum = sum(weight)
-    weight_adj = [round(w / weight_sum, 4) for w in weight]
-    matrix = np.zeros((n,1536))
+    weight_adj = [round(w/weight_sum, 4) for w in weight]
+    matrix = np.zeros((n, 1536))
     for i in range(n):
         v = ingre_vector[ingre[i]] * weight_adj[i]
         matrix[i] = v
@@ -28,7 +32,6 @@ def cal_recipe_vector(ingre: List[str], weight: List[float]) -> List[float]:
     return list(recipe_vector)
 
 def lambda_handler(event, context):
-
     req = event['input']
     ingre = []
     weight = []
@@ -38,6 +41,7 @@ def lambda_handler(event, context):
     
     query_vector = cal_recipe_vector(ingre=ingre, weight=weight)
 
+    # 쿼리벡터와 코사인 요사도 가장 높은 레시피 벡터 조회(top_k만큼)
     top_k = 20
     result = index.query(
         vector=query_vector,
@@ -45,8 +49,9 @@ def lambda_handler(event, context):
         include_values=False,
         include_metadata=True
     )
-    matches = result['matches']
 
+    # 조회된 결과를 전처리
+    matches = result['matches']
     recipe_rec_list = []
     for i in range(len(matches)):
         metadata = matches[i]['metadata']
