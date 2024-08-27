@@ -14,7 +14,7 @@
 
 > 백엔드
 
-Python, Numpy, Pandas, Gensim, Openai
+Python, Numpy, Pandas, Gensim, Openai, Django
 
 
 
