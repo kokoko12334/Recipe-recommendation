@@ -32,13 +32,13 @@ Github, Notion
 
 > 데이터베이스
 
-Sqlite3, ChromaDB, Pinecone
+Sqlite3, ChromaDB, Pinecone, S3
 
  
 
 > 배포
 
-AWS Lambda, S3, APIGateway
+AWS Lambda, APIGateway
 
 
 
@@ -67,7 +67,7 @@ AWS Lambda, S3, APIGateway
 
 > 업데이트 - 4(2024.08)
 
-- AWS Step Functions를 활용한 ETL 파이프라인을 통해 새로운 레시피 정보 Vector DB에 저장.
+- AWS Step Functions를 활용한 ETL 파이프라인을 통해 **"만개의 레시피"에 올라온 최신 레시피 데이터**를 Vector DB에 저장.
 
 
 
