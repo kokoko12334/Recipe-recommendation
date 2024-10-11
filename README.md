@@ -8,6 +8,8 @@
 
 
 
+---
+
 
 
 ## 🛠️기술
@@ -43,6 +45,10 @@ AWS Lambda, APIGateway
 
 
 
+---
+
+
+
 
 ### :timer_clock:개발 내역
 
@@ -71,6 +77,10 @@ AWS Lambda, APIGateway
 
 
 
+---
+
+
+
 ## :file_folder: 주요 폴더/파일
 
 
@@ -80,6 +90,8 @@ AWS Lambda, APIGateway
 4. `lambda_function.py`: 서버리스 환경에서 실행되는 AWS람다함수
 
 
+
+---
 
 
 
@@ -110,7 +122,7 @@ AWS Lambda, APIGateway
 ![](./img/설명.png)
 
 
-
+---
 
 
 ## :straight_ruler: 기존 방식과의 비교
@@ -139,6 +151,9 @@ AWS Lambda, APIGateway
 
 
 
+
+
+---
 
 
 
