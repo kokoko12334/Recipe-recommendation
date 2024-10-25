@@ -38,12 +38,6 @@ Sqlite3, ChromaDB, Pinecone, S3
 
  
 
-> 배포
-
-AWS Lambda, APIGateway
-
-
-
 
 ---
 
@@ -66,10 +60,6 @@ AWS Lambda, APIGateway
 >  수정사항 - 2(2024.03 ~ 2024.04)
 
 - 벡터데이터베이스 탐색 방식을 개선하여 로컬환경에서 요청-응답 시간을 1초 -> 0.1초로 개선(https://kokoko12334.tistory.com/entry/hsfl)
-
-> 수정사항 - 3(2024.06 ~ 2024.07)
-
-- 서버리스로 전환하여 비용 절감.
 
 > 수정사항 - 4(2024.08)
 
