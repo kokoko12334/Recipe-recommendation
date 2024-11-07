@@ -4,8 +4,6 @@
 
 자연어 처리 기술을 통해 여러 텍스트에 대해서 유연한 처리를 기대하며 제작을 하였습니다.
 
-> :link:https://www.testrecipe.link/
-
 
 
 ---
@@ -60,10 +58,6 @@ Sqlite3, ChromaDB, Pinecone, S3
 >  수정사항 - 2(2024.03 ~ 2024.04)
 
 - 벡터데이터베이스 탐색 방식을 개선하여 로컬환경에서 요청-응답 시간을 1초 -> 0.1초로 개선(https://kokoko12334.tistory.com/entry/hsfl)
-
-> 수정사항 - 4(2024.08)
-
-- AWS Step Functions를 활용한 ETL 파이프라인을 통해 **"만개의 레시피"에 올라온 최신 레시피 데이터**를 Vector DB에 저장.(https://kokoko12334.tistory.com/120)
 
 
 
