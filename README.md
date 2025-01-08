@@ -139,19 +139,3 @@ Sqlite3, ChromaDB, Pinecone, S3
 ---
 
 
-
-## 🖥️ 배포 환경 아키텍처
-
-![](./img/AWS아키텍처.png)
-
-
-
-
-
-
-
-
-
-https://simpleicons.org/
-
-https://emoji.muan.co/
